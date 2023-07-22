@@ -54,7 +54,7 @@ do
 
     wget ${PRESIGNED_URL/'*'/"${MODEL_PATH}/params.json"} -O ${TARGET_FOLDER}"/${MODEL_PATH}/params.json"
     wget ${PRESIGNED_URL/'*'/"${MODEL_PATH}/checklist.chk"} -O ${TARGET_FOLDER}"/${MODEL_PATH}/checklist.chk"
-    echo "Checking checksums"
-    (cd ${TARGET_FOLDER}"/${MODEL_PATH}" && md5sum -c checklist.chk)
+    echo "- Checking checksums in ${TARGET_FOLDER}/${MODEL_PATH} -"
+    (cd ${TARGET_FOLDER}"/${MODEL_PATH}" && awk '{print $1 "  " $2}' checklist.chk | xargs -n2 -P$(getconf _NPROCESSORS_ONLN) -I{} sh -c 'md5sum -c <<< "{}"')
 done
 
